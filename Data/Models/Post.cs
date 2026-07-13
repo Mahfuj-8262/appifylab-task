@@ -1,10 +1,17 @@
 namespace Appifylab.Data.Models;
 
+public enum PostVisibility
+{
+    Public,
+    Private
+}
+
 public class Post
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.CreateVersion7();
     public string Content { get; set; } = string.Empty;
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
+    public PostVisibility Visibility { get; set; } = PostVisibility.Public;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Guid UserId { get; set; }

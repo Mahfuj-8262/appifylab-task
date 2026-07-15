@@ -91,8 +91,8 @@ public static class AuthEndpoints
         ctx.Response.Cookies.Append("refreshToken", rawToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = !env.IsDevelopment(),
-            SameSite = SameSiteMode.Strict,
+            Secure = true,
+            SameSite = SameSiteMode.None,
             Expires = expiresAt,
             Path = "/api/auth"
         });

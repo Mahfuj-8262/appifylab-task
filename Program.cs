@@ -66,6 +66,11 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
         : new AmazonS3Client(config);
 });
 
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IImageStorageService, S3ImageStorageService>();
+builder.Services.AddScoped<IPostService, PostService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

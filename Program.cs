@@ -71,6 +71,18 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IImageStorageService, S3ImageStorageService>();
 builder.Services.AddScoped<IPostService, PostService>();
 
+const string CorsPolicy = "Frontend";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicy, policy =>
+    {
+        policy.WithOrigins(builder.Configuration["Frontend:Origin"] ?? "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -5,6 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Appifylab.Common;
 using Appifylab.Data;
+using Amazon;
+using Amazon.S3;
+using Appifylab.Endpoints;
+using Appifylab.Services;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +48,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.Configure<S3Settings>(builder.Configuration.GetSection("S3"));
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var s3 = sp.GetRequiredService<IOptions<S3Settings>>().Value;
+
+    var config = new AmazonS3Config { RegionEndpoint = RegionEndpoint.GetBySystemName(s3.Region) };
+    if (!string.IsNullOrWhiteSpace(s3.ServiceUrl)) 
+    {
+        config.ServiceURL = s3.ServiceUrl;
+        config.ForcePathStyle = true;
+    }
+
+    return !string.IsNullOrWhiteSpace(s3.AccessKey) && !string.IsNullOrWhiteSpace(s3.SecretKey)
+        ? new AmazonS3Client(s3.AccessKey, s3.SecretKey, config)
+        : new AmazonS3Client(config);
+});
 
 var app = builder.Build();
 

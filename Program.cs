@@ -96,4 +96,11 @@ else
     app.UseHsts();
 }
 
+app.UseCors(CorsPolicy);
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapAuthEndpoints();
+app.MapPostEndpoints();
+
 app.Run();
